@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Web Components — Fabrick Sandbox Bench</title>
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/bench.css" />
+  <!-- Fabrick Web Components, sandbox build. Loaded statically in the <head>,
+       as the documentation requires: the script registers the custom elements,
+       and they must exist before any of them is created. -->
+  <script src="https://sandbox-web.axerve.com/orchestra/checkout/assets/elements/fbk-elements.js"></script>
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="page">
+    <div id="crumbs"></div>
+
+    <div class="page-head">
+      <h1 data-t="wc.1">Web Components</h1>
+      <p class="lead" data-t="wc.2">Il pagamento dentro la tua pagina, senza iFrame né pop-up: un elemento HTML che riceve <code>payment-id</code> e <code>payment-token</code> e porta a termine l’intero flusso, inclusi i redirect di 3DS e APM.</p>
+      <div class="doc-links">
+        <a data-doc="webcomponents" data-icon data-t="wc.3">Guida Web Components</a>
+        <a data-doc="testCards" data-icon data-t="wc.4">Carte di test</a>
+        <a data-doc="applePay" data-icon data-t="wc.5">Configurazione Apple Pay</a>
+        <a data-doc="googlePay" data-icon data-t="wc.6">Configurazione Google Pay</a>
+      </div>
+    </div>
+
+    <div id="returnHost"></div>
+
+    <section class="card">
+      <h2 data-t="wc.7">Dati pagamento</h2>
+      <div id="sessionFields"></div>
+
+      <div class="field">
+        <span class="label" id="compLabel" data-t="wc.8">Componente</span>
+        <div class="chips" id="componentPicker" role="radiogroup" aria-labelledby="compLabel"></div>
+        <small class="hint" id="componentAbout"></small>
+      </div>
+
+      <div class="field">
+        <span class="label" data-t="wc.9">Attributi</span>
+        <div class="field-grid" id="attrFields"></div>
+        <small class="hint" data-t="wc.10">Solo gli attributi diversi dal default finiscono sul tag e nel codice generato. Cambiando un valore con il componente montato, il banco lo rimonta.</small>
+      </div>
+
+      <div class="field">
+        <span class="label" id="shopModeLabel" data-t="wc.11">Shop Login passato con</span>
+        <div class="chips" role="radiogroup" aria-labelledby="shopModeLabel">
+          <label class="chip"><input type="radio" name="shopMode" value="js" checked /><code>window['fbk-elements'].shop</code></label>
+          <label class="chip" data-t="wc.12"><input type="radio" name="shopMode" value="attr" />attributo <code>shop-login</code></label>
+        </div>
+        <small class="hint" data-t="wc.13">Le due modalità della documentazione. In entrambe lo Shop Login deve essere impostato prima che il componente entri nel DOM.</small>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn--primary" id="mountBtn" data-t="wc.14">Monta componente</button>
+        <button type="button" class="btn btn--danger" id="unmountBtn" data-t="wc.15">Smonta</button>
+      </div>
+      <div id="statusMessage"></div>
+    </section>
+
+    <!-- CONTAINMENT: this card and its ancestors carry no overflow, transform,
+         filter or contain. The component opens its own overlays (3DS, wallet
+         sheets) and they must be free to cover the viewport. -->
+    <section class="card">
+      <div class="card-head">
+        <h2 data-t="wc.16">Anteprima</h2>
+        <div class="row">
+          <div class="seg" role="group" aria-label="Larghezza del contenitore" id="widthSeg" data-t-attr="aria-label:wc.17">
+            <button type="button" class="seg__btn" data-width="100%" aria-pressed="true">100%</button>
+            <button type="button" class="seg__btn" data-width="480px" aria-pressed="false" data-t="wc.18">480px</button>
+            <button type="button" class="seg__btn" data-width="360px" aria-pressed="false" data-t="wc.19">360px</button>
+          </div>
+          <div class="seg" role="group" aria-label="Sfondo dell’anteprima" id="surfaceSeg" data-t-attr="aria-label:wc.20">
+            <button type="button" class="seg__btn" data-surface="auto" aria-pressed="true" data-t="wc.21">Tema</button>
+            <button type="button" class="seg__btn" data-surface="light" aria-pressed="false" data-t="wc.22">Chiaro</button>
+            <button type="button" class="seg__btn" data-surface="dark" aria-pressed="false" data-t="wc.23">Scuro</button>
+          </div>
+        </div>
+      </div>
+      <div class="mount" id="mount" data-surface="auto">
+        <div class="mount__inner" id="mountInner"></div>
+      </div>
+      <p class="mt small muted" data-t="wc.24">Il componente occupa il 100% del contenitore: la larghezza qui sopra dimensiona il <code>&lt;div&gt;</code> che lo racchiude. Lo sfondo riguarda solo l’anteprima: l’aspetto interno del componente è deciso da Fabrick.</p>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2 data-t="wc.25">Eventi</h2>
+        <button type="button" class="btn btn--secondary btn--sm" id="clearLog" data-t="wc.26">Svuota</button>
+      </div>
+      <p class="card-sub" data-t="wc.27">Montaggi e smontaggi del banco, più gli eventi <code>fbk-elements-error</code> emessi dal componente: errori che non interrompono la transazione, con <code>code</code>, <code>title</code> e <code>message</code>.</p>
+      <ul class="log" id="eventLog"></ul>
+    </section>
+
+    <section class="card">
+      <h2 data-t="wc.28">Codice</h2>
+      <p class="card-sub" data-t="wc.29">La pagina di integrazione che corrisponde alla configurazione qui sopra, secondo lo schema della documentazione.</p>
+      <div id="codeHost"></div>
+    </section>
+
+    <section class="card" id="detailCard"></section>
+
+    <section class="card">
+      <h2 data-t="wc.30">Da sapere</h2>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="wc.31">Nessuna callback</div>
+        <p data-t="wc.32">Il componente gestisce l’intero flusso e a fine pagamento Fabrick reindirizza il buyer alla URL di esito della transazione, inviando la notifica server-to-server. L’esito si legge da lì e da <code>GET payment/detail</code>: vedi <a data-doc="responseAddress">Response address</a>.</p>
+      </div>
+      <div class="admonition admonition--warning">
+        <div class="admonition__title" data-t="wc.33">Apple Pay e Google Pay</div>
+        <p data-t="wc.34">I wallet compaiono solo dopo la configurazione dedicata a ciascuno: <a data-doc="applePay">Apple Pay</a> e <a data-doc="googlePay">Google Pay</a>. Senza, il pulsante non viene disegnato: per questo cambiare gli attributi dei wallet può sembrare senza effetto.</p>
+      </div>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="wc.35">Quali metodi mostra <code>&lt;fbk-checkout&gt;</code></div>
+        <p data-t="wc.36">Dipende da <code>paymentType</code> nella <code>payment/create</code>: senza il campo, tutti i metodi abilitati sullo Shop Login che non richiedono campi obbligatori; con il campo, solo i metodi indicati.</p>
+      </div>
+      <div class="admonition admonition--tip">
+        <div class="admonition__title" data-t="wc.37">Per questa integrazione</div>
+        <p data-t="wc.38">La transazione va creata <strong>senza</strong> l’oggetto <code>paymentChannel</code>: servono solo <code>paymentID</code> e <code>paymentToken</code>. Il body precompilato è già così.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="assets/js/i18n.en.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/webcomponents.js"></script>
+</body>
+</html>

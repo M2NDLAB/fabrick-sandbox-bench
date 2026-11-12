@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Pulsanti APM — Fabrick Sandbox Bench</title>
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/bench.css" />
+  <link rel="stylesheet" href="assets/css/buttons.css" />
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="page">
+    <div id="crumbs"></div>
+
+    <div class="page-head">
+      <h1 data-t="btn.1">Pulsanti APM</h1>
+      <p class="lead" data-t="btn.2">Il link di pagamento sotto il pulsante del brand: scegli il metodo, guarda il pulsante costruito secondo le sue linee guida, cliccalo per andare al pagamento e copia il codice.</p>
+      <div class="doc-links">
+        <a data-doc="apm" data-icon data-t="btn.3">Metodi di pagamento alternativi</a>
+        <a data-doc="paymentTypes" data-icon data-t="btn.4">Elenco dei paymentType</a>
+      </div>
+    </div>
+
+    <div id="returnHost"></div>
+
+    <section class="card">
+      <h2 data-t="btn.5">Dati pagamento</h2>
+      <p class="card-sub" data-t="btn.6">Scegli il metodo e invia la richiesta: il link della risposta finisce sotto il pulsante. Il banco mostra solo i brand indicati in <code>paymentType</code>, perché solo per quelli il link porta direttamente al metodo.</p>
+      <div id="sessionFields"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="btn.7">Pulsante</h2>
+      <div class="tabs" role="tablist" aria-label="Metodo di pagamento" id="methodTabs" data-t-attr="aria-label:btn.8"></div>
+
+      <div class="card-head">
+        <p class="small muted mb0" id="methodLine"></p>
+        <div class="seg" role="group" aria-label="Sfondo dell’anteprima" id="surfaceSeg" data-t-attr="aria-label:btn.9">
+          <button type="button" class="seg__btn" data-surface="light" aria-pressed="true" data-t="btn.10">Fondo chiaro</button>
+          <button type="button" class="seg__btn" data-surface="dark" aria-pressed="false" data-t="btn.11">Fondo scuro</button>
+        </div>
+      </div>
+
+      <div class="mount" id="mount" data-surface="light">
+        <div class="mount__inner specimen" id="specimen"></div>
+      </div>
+      <div id="statusMessage"></div>
+      <div id="notes" class="mt stack"></div>
+
+      <h3 class="sub-title" data-t="btn.12">Opzioni</h3>
+      <div class="field-grid" id="controls"></div>
+      <div class="field-grid">
+        <div class="field">
+          <label for="height" data-t="btn.13">Altezza: <span id="heightValue">48</span> px</label>
+          <input type="range" id="height" min="24" max="64" step="1" value="48" />
+          <small class="hint" id="heightHint"></small>
+        </div>
+        <div class="field">
+          <label for="width" data-t="btn.14">Larghezza: <span id="widthValue">320</span> px</label>
+          <input type="range" id="width" min="160" max="480" step="10" value="320" />
+        </div>
+        <div class="field">
+          <span class="label" id="targetLabel" data-t="btn.15">Al click</span>
+          <div class="chips" role="radiogroup" aria-labelledby="targetLabel">
+            <label class="chip" data-t="btn.16"><input type="radio" name="target" value="tab" checked />Nuova scheda</label>
+            <label class="chip" data-t="btn.17"><input type="radio" name="target" value="self" />Questa scheda</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="btn.18">Codice</h2>
+      <p class="card-sub" data-t="btn.19">Il markup del pulsante che vedi, con il link di pagamento già inserito.</p>
+      <div id="codeHost"></div>
+    </section>
+
+    <section class="card">
+      <h2 id="rulesTitle" data-t="btn.20">Linee guida</h2>
+      <div id="rules"></div>
+      <p class="mt eyebrow" data-t="btn.21">Fonti</p>
+      <ul id="sources" class="small"></ul>
+    </section>
+
+    <section class="card" id="detailCard"></section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="assets/js/i18n.en.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/buttons.js"></script>
+</body>
+</html>

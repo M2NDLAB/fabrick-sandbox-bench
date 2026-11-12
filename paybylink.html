@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Pay By Link — Fabrick Sandbox Bench</title>
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/bench.css" />
+  <link rel="stylesheet" href="assets/css/paybylink.css" />
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="page">
+    <div id="crumbs"></div>
+
+    <div class="page-head">
+      <h1 data-t="pbl.1">Pay By Link</h1>
+      <p class="lead" data-t="pbl.2">La pagina di pagamento Fabrick raggiunta fuori dal checkout: con un link da condividere, un QR Code da mostrare o una email inviata da Fabrick, e con un periodo di validità che decidi tu.</p>
+      <div class="doc-links">
+        <a data-doc="paybylink" data-icon data-t="pbl.3">Guida Pay By Link</a>
+        <a data-doc="testCards" data-icon data-t="pbl.4">Carte di test</a>
+        <a data-doc="paymentTypes" data-icon data-t="pbl.5">Elenco dei paymentType</a>
+      </div>
+    </div>
+
+    <div id="returnHost"></div>
+
+    <section class="card">
+      <h2 data-t="pbl.6">Dati pagamento</h2>
+      <p class="card-sub" data-t="pbl.7">Componi la richiesta con canali e validità, ritocca il body se serve e invia. Se hai già un link o la stringa di un QR, passali nella seconda scheda: in quel caso non c’è nulla da inviare.</p>
+      <div id="sessionFields"></div>
+      <div id="builderSummary"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="pbl.8">Canale LINK</h2>
+      <p class="card-sub" data-t="pbl.9">L’URL di pagamento restituito in <code>payload.userRedirect.href</code>: da usare per un redirect o da condividere con il buyer.</p>
+      <div id="linkHost"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="pbl.10">Canale QRCODE</h2>
+      <p class="card-sub" data-t="pbl.11">Con <code>QRCODE</code> tra i canali la risposta contiene <code>payload.qrCode</code>, una stringa Base64 che qui diventa l’immagine da inquadrare.</p>
+      <div id="qrStatus"></div>
+      <div class="qr" id="qrPanel" hidden>
+        <div class="qr__frame"><img id="qrImage" alt="QR Code" / data-t-attr="alt:pbl.12"></div>
+        <div class="qr__side">
+          <div class="field">
+            <label for="qrSize" data-t="pbl.13">Dimensione a video: <span id="qrSizeValue">240</span> px</label>
+            <input type="range" id="qrSize" min="120" max="420" step="20" value="240" />
+            <small class="hint" data-t="pbl.14">Ingrandire oltre la risoluzione originale sfoca i moduli: per la stampa conviene generare il QR dal link.</small>
+          </div>
+          <dl class="kv" id="qrMeta"></dl>
+          <div class="actions">
+            <button type="button" class="btn btn--secondary btn--sm" id="qrDownload" data-t="pbl.15">Scarica PNG</button>
+            <button type="button" class="btn btn--secondary btn--sm" id="qrCopy" data-t="pbl.16">Copia data URI</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="detailCard"></section>
+
+    <section class="card">
+      <h2 data-t="pbl.17">Da sapere</h2>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="pbl.18">Canali</div>
+        <p data-t="pbl.19"><code>channelType</code> è l’unico parametro obbligatorio dell’integrazione. Più canali insieme sono ammessi: con <code>LINK</code> ed <code>EMAIL</code> ottieni il link e Fabrick invia anche l’email all’indirizzo in <code>buyerEmail</code>.</p>
+      </div>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="pbl.20">Validità</div>
+        <p data-t="pbl.21">Senza <code>validityPeriod</code> il link vale 48 ore. Con inizio e fine puoi definire un intervallo, per una durata massima di 49 ore. Per ciascuno dei due oggetti va valorizzato un solo parametro alla volta.</p>
+      </div>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="pbl.22">Prima dell’inizio e dopo la scadenza</div>
+        <p data-t="pbl.23">Chi apre il link prima dell’inizio della validità vede un avviso con data e ora da cui potrà pagare; dopo la scadenza, un avviso che la richiesta non è più valida.</p>
+      </div>
+      <div id="returnTip"></div>
+      <div class="admonition admonition--warning">
+        <div class="admonition__title" data-t="pbl.24">Stato sospeso (XX)</div>
+        <p data-t="pbl.25">Per alcuni APM l’esito è asincrono: il buyer torna sulla URL di esito positivo con <code>Status=XX</code>, ma il pagamento non è ancora definitivo. Non evadere l’ordine: attendi la notifica server-to-server con l’esito finale.</p>
+      </div>
+      <div class="admonition admonition--warning">
+        <div class="admonition__title" data-t="pbl.26">WebView e app native</div>
+        <p data-t="pbl.27">La pagina è ottimizzata per il browser e la compatibilità con WebView e applicazioni native non è garantita: in quei contesti apri il link in un browser esterno, oppure valuta <a href="apionly.html">API Only</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="assets/js/i18n.en.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/paybylink.js"></script>
+</body>
+</html>

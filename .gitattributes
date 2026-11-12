@@ -1,0 +1,6 @@
+# Apple compares the domain association file byte for byte with the one it
+# issued: no end-of-line conversion, on any platform.
+.well-known/apple-developer-merchantid-domain-association -text
+
+# Fonts are binary; say so instead of relying on detection.
+*.woff2 binary

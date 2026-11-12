@@ -1,0 +1,20 @@
+name: Feature request
+description: An integration, option or check the bench should have
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What you are trying to test
+      description: The situation, not the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+  - type: input
+    id: source
+    attributes:
+      label: Documentation reference
+      description: Link to the Fabrick or brand documentation page that describes the behaviour.

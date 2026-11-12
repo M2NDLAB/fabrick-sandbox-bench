@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Checkout Page — Fabrick Sandbox Bench</title>
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/bench.css" />
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="page">
+    <div id="crumbs"></div>
+
+    <div class="page-head">
+      <h1 data-t="co.1">Checkout Page</h1>
+      <p class="lead" data-t="co.2">La pagina di pagamento ospitata da Fabrick (Hosted Payment Page Orchestra): crei la richiesta con il canale <code>LINK</code>, Fabrick restituisce il link e il buyer, reindirizzato lì, sceglie il metodo e paga.</p>
+      <div class="doc-links">
+        <a data-doc="checkout" data-icon data-t="co.3">Guida HPPO</a>
+        <a data-doc="testCards" data-icon data-t="co.4">Carte di test</a>
+        <a data-doc="paymentTypes" data-icon data-t="co.5">Elenco dei paymentType</a>
+      </div>
+    </div>
+
+    <div id="returnHost"></div>
+
+    <section class="card">
+      <h2 data-t="co.6">Dati pagamento</h2>
+      <p class="card-sub" data-t="co.7">Inserisci lo Shop Login, controlla il body e invia: la richiesta parte davvero verso la sandbox e la risposta alimenta il resto della pagina.</p>
+      <div id="sessionFields"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="co.8">Pagina di pagamento</h2>
+      <p class="card-sub" data-t="co.9">Il link verso cui reindirizzare il buyer: <code>payload.userRedirect.href</code> della risposta. Aprilo in una nuova scheda per tenere il banco a portata di mano, oppure in questa per provare il redirect come lo vivrà il buyer.</p>
+      <div id="linkHost"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="co.10">Codice</h2>
+      <p class="card-sub" data-t="co.11">I due modi di usare il link nel frontend: redirect immediato o pulsante.</p>
+      <div id="codeHost"></div>
+    </section>
+
+    <section class="card" id="detailCard"></section>
+
+    <section class="card">
+      <h2 data-t="co.12">Da sapere</h2>
+
+      <p class="eyebrow" data-t="co.13">Cosa vede il buyer, in base a <code>paymentType</code></p>
+      <div class="scroll-x">
+        <table class="table">
+          <thead><tr><th><code>paymentType</code></th><th data-t="co.14">Comportamento</th></tr></thead>
+          <tbody>
+            <tr><td data-t="co.15">Non valorizzato</td><td data-t="co.16">Pagina di selezione con tutti i metodi abilitati sullo Shop Login che non richiedono campi obbligatori</td></tr>
+            <tr><td data-t="co.17">Più metodi, ad esempio <code>["FABRICKPASS", "CREDITCARD"]</code></td><td data-t="co.18">Pagina di selezione limitata ai metodi indicati</td></tr>
+            <tr><td data-t="co.19">Solo <code>["CREDITCARD"]</code></td><td data-t="co.20">Direttamente la pagina Fabrick di inserimento dei dati carta, con i wallet abilitati</td></tr>
+            <tr><td data-t="co.21">Un solo APM, ad esempio <code>["FABRICKPASS"]</code></td><td data-t="co.22">Nessuna selezione: redirect diretto al servizio se il metodo lo prevede, altrimenti pagamento sulla pagina Fabrick</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="returnTip" class="mt"></div>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="co.23">Esito e ritorno del buyer</div>
+        <p data-t="co.24">A fine pagamento Fabrick reindirizza il buyer alla URL di esito e invia la notifica server-to-server. Nella URL c’è il parametro <code>Status</code>: <code>OK</code>, <code>KO</code> oppure <code>XX</code> (sospeso, in attesa dell’esito finale). Le URL si configurano nel backoffice o, per la singola transazione, con l’oggetto <code>responseURLs</code>: vedi <a data-doc="responseAddress">Response address</a>.</p>
+      </div>
+      <div class="admonition admonition--warning">
+        <div class="admonition__title" data-t="co.25">Metodi con campi obbligatori</div>
+        <p data-t="co.26">Alcuni metodi vengono presentati solo se la <code>payment/create</code> include i campi che richiedono: in caso contrario non compaiono nella pagina di selezione. I campi sono indicati nella pagina di ciascun <a data-doc="apm">metodo di pagamento</a>.</p>
+      </div>
+      <div class="admonition admonition--warning">
+        <div class="admonition__title" data-t="co.27">WebView e app native</div>
+        <p data-t="co.28">La pagina è ottimizzata per il browser e la compatibilità con WebView e applicazioni native non è garantita. In quei contesti apri il link in un browser esterno, oppure valuta l’integrazione <a href="apionly.html">API Only</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="assets/js/i18n.en.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/checkout.js"></script>
+</body>
+</html>

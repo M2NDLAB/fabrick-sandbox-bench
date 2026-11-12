@@ -1,0 +1,112 @@
+# Checks the static site, then publishes it to GitHub Pages.
+# Enable under Settings → Pages → Source: GitHub Actions.
+name: Pages
+
+# Branch model: work lands on dev, stable versions are merged into master.
+# Checks run on both; only master is published.
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Script syntax
+        run: |
+          for f in assets/js/*.js; do
+            node --check "$f" || exit 1
+          done
+
+      # A page that references a missing local file fails silently in the
+      # browser: an unstyled page, or a button that does nothing.
+      # Every data-t key in the pages should have an English entry, unless the
+      # text is the same in both languages. Reported, not enforced: a missing
+      # entry falls back to Italian, it does not break the page.
+      - name: Translation keys without an English entry
+        run: |
+          for key in $(grep -ohE 'data-t="[a-z]+\.[0-9]+"' *.html | sed -E 's/data-t="//; s/"$//' | sort -u); do
+            grep -q "'$key':" assets/js/i18n.en.js || echo "::notice::no English entry for $key"
+          done
+
+      - name: Local asset references
+        run: |
+          status=0
+          for page in *.html; do
+            for ref in $(grep -oE '(href|src)="assets/[^"]+"' "$page" | sed -E 's/^(href|src)="//; s/"$//'); do
+              if [ ! -f "$ref" ]; then
+                echo "::error file=$page::missing $ref"
+                status=1
+              fi
+            done
+          done
+          exit $status
+
+      # No inline scripts: keeps the site compatible with a strict CSP.
+      - name: No inline scripts
+        run: |
+          if grep -nE '<script>|<script [^>]*>[^<]' *.html | grep -v 'src='; then
+            echo "::error::inline script found"
+            exit 1
+          fi
+
+      # The sandbox-only rule: no production host in executable code. Generated
+      # snippets may mention production URLs inside comments, so only
+      # non-comment occurrences in the constants block of core.js are checked.
+      - name: Sandbox constants
+        run: |
+          if sed -n '/^const SANDBOX/,/^});/p' assets/js/core.js | grep -E 'ecomms2s\.sella\.it|ecomm\.sella\.it|//web\.axerve\.com'; then
+            echo "::error file=assets/js/core.js::production host in SANDBOX constants"
+            exit 1
+          fi
+
+  deploy:
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+
+      - name: Apple Pay domain association file
+        run: |
+          if [ ! -f .well-known/apple-developer-merchantid-domain-association ]; then
+            echo "::warning::.well-known/apple-developer-merchantid-domain-association is missing: Apple Pay will not be offered. See .well-known/README.md"
+          fi
+
+      # The artifact is packaged by hand instead of with upload-pages-artifact:
+      # from v4 that action excludes every dotfile, which would silently drop
+      # .well-known (and with it Apple Pay) and .nojekyll. deploy-pages only
+      # needs an artifact named "github-pages" holding artifact.tar.
+      - name: Package the site, hidden folders included
+        run: |
+          tar --dereference --hard-dereference \
+            --exclude=.git --exclude=.github \
+            -cf "$RUNNER_TEMP/artifact.tar" .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          retention-days: 1
+          if-no-files-found: error
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,18 @@
+# Operating system and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Nothing is installed or built, but tools leave these behind
+node_modules/
+dist/
+
+# The shortest paths to a leaked credential: local notes and exported requests
+.env
+.env.*
+*.local
+*.postman_environment.json
+*.har
+notes/

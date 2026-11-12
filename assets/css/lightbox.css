@@ -1,0 +1,45 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   lightbox.css — lightbox.html only
+
+   THE FLIP CARD AND THE CONTAINMENT RULE
+   The "Dati pagamento" card turns over to show the integration code. That
+   needs perspective and transform, two properties bench.css forbids on any
+   ancestor of a mount area. It is allowed here for a precise reason: the
+   Lightbox does not render inside this card. axerve.js appends its overlay
+   directly to <body>, so nothing transformed sits above it. Do not reuse this
+   pattern on a page whose component renders in place, such as Web Components.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* The two faces share one grid cell instead of being absolutely positioned.
+   With position:absolute the back face inherits the height of the front and a
+   tall editor is cut off; in a grid the container takes the taller of the two. */
+.flip-scene { perspective: 1800px; }
+.flipper {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.flipper.is-flipped { transform: rotateY(180deg); }
+.face {
+  grid-area: 1 / 1;
+  min-width: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.face--back { transform: rotateY(180deg); }
+/* inert removes focus and interaction from the hidden face: without it, Tab
+   would walk into fields nobody can see. */
+.face[inert] { pointer-events: none; }
+
+.code-bar { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.7rem; }
+.code-bar .tabs { margin: 0; flex: 1 1 auto; }
+
+.sdk-current { margin-top: 0.6rem; font-size: 0.84rem; color: var(--muted); overflow-wrap: anywhere; }
+.sdk-current .pill { margin-right: 0.4rem; }
+
+.code-note { margin-top: 0.6rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* The flip becomes an instant swap. */
+  .flipper { transition: none; }
+}

@@ -1,0 +1,39 @@
+name: Bug report
+description: Something on the bench does not behave as described
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Redact `paymentID` and `paymentToken` before pasting logs or screenshots.** They are read credentials for 24 hours. Never paste an API key.
+  - type: dropdown
+    id: page
+    attributes:
+      label: Page
+      options: [Home, Checkout Page, Pay By Link, Web Components, Lightbox, API Only, Pulsanti APM]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected, what you saw instead.
+    validations:
+      required: true
+  - type: textarea
+    id: console
+    attributes:
+      label: Console output
+      description: Filter the console by FABRICK and paste the relevant lines, redacted.
+      render: text
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+    validations:
+      required: true
+  - type: input
+    id: build
+    attributes:
+      label: Build
+      description: The string at the right end of the footer, for example 2026-11-12.r1

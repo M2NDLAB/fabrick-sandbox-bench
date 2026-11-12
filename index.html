@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <meta name="description" content="Banco di prova sandbox per le integrazioni frontend di Fabrick Payment Orchestra." />
+  <title>Fabrick Sandbox Bench</title>
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/bench.css" />
+  <link rel="stylesheet" href="assets/css/home.css" />
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__inner">
+        <span class="hero__eyebrow" data-t="home.1">Solo ambiente sandbox</span>
+        <h1 data-t="home.2">Fabrick Sandbox Bench</h1>
+        <p data-t="home.3">Prova le integrazioni di Fabrick Payment Orchestra su una transazione di test vera: scegli l’integrazione, crea la richiesta dal banco oppure incolla i valori che hai già, guarda cosa succede.</p>
+        <div class="hero__ctas">
+          <a class="cta cta--primary" href="#integrazioni" data-t="home.4">
+            Scegli l’integrazione
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="cta cta--secondary" data-doc="home" data-t="home.5">Documentazione</a>
+          <a class="cta cta--secondary" data-doc="testCards" data-t="home.6">Carte di test</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tiles-section" id="integrazioni">
+      <div class="section-inner">
+        <h2 class="section-title" data-t="home.7">Integrazioni</h2>
+        <p class="section-sub" data-t="home.8">Ogni pagina è indipendente e parte dalla richiesta giusta per quell’integrazione. Shop Login e API key restano nella scheda del browser e ti seguono da una pagina all’altra.</p>
+        <ul class="tiles" id="tiles"></ul>
+      </div>
+    </section>
+
+    <section class="how">
+      <div class="section-inner how__grid">
+        <div class="card">
+          <h2 data-t="home.9">Come si usa</h2>
+          <ol class="steps">
+            <li data-t="home.10">Apri un’integrazione e inserisci Shop Login e API key della sandbox.</li>
+            <li data-t="home.11">Controlla il body di <code>payment/create</code>, già precompilato per quell’integrazione, e premi <strong>Invia</strong>: la richiesta parte davvero verso la sandbox.</li>
+            <li data-t="home.12">La risposta alimenta la pagina: link, QR, componente o pop-up. Esegui il flusso con una <a data-doc="testCards">carta di test</a>.</li>
+            <li data-t="home.13">Chiudi il giro con <strong>Verifica esito</strong>: è l’unico stato che fa fede, insieme alla notifica server-to-server.</li>
+          </ol>
+          <p class="mt small muted" data-t="home.14">Hai già creato la transazione da Postman o dal tuo server? Nella scheda «Ho già i valori» incolli Payment ID e Payment Token e salti il primo passo.</p>
+          <div class="mt admonition admonition--warning">
+            <div class="admonition__title" data-t="home.15">Solo sandbox</div>
+            <p data-t="home.16">Gli endpoint sono costanti e puntano alla sandbox. Non inserire API key di produzione né dati di carte reali. In un sito reale <code>payment/create</code> va chiamata dal server: qui parte dal browser solo perché è un banco di prova.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 data-t="home.17">Quale <code>payment/create</code> per quale integrazione</h2>
+          <p class="card-sub" data-t="home.18">È l’oggetto <code>paymentChannel</code> a decidere cosa contiene la risposta, quindi quale integrazione puoi usare.</p>
+          <div class="scroll-x">
+            <table class="table">
+              <thead>
+                <tr><th data-t="home.19">Integrazione</th><th data-t="home.20">Nel body</th><th data-t="home.21">Dalla risposta</th></tr>
+              </thead>
+              <tbody>
+                <tr><td data-t="home.22">Checkout Page</td><td><code>paymentChannel.channelType: ["LINK"]</code></td><td><code>userRedirect.href</code></td></tr>
+                <tr><td data-t="home.23">Pay By Link</td><td data-t="home.24"><code>channelType</code> con <code>LINK</code>, <code>QRCODE</code>, <code>EMAIL</code></td><td><code>userRedirect.href</code>, <code>qrCode</code></td></tr>
+                <tr><td data-t="home.25">Web Components</td><td data-t="home.26">senza <code>paymentChannel</code></td><td><code>paymentID</code>, <code>paymentToken</code></td></tr>
+                <tr><td data-t="home.27">Lightbox</td><td data-t="home.28">senza <code>paymentChannel</code></td><td><code>paymentID</code>, <code>paymentToken</code></td></tr>
+                <tr><td data-t="home.29">API Only</td><td data-t="home.30">senza <code>paymentChannel</code></td><td data-t="home.31"><code>paymentToken</code> per <code>payment/submit</code></td></tr>
+                <tr><td data-t="home.32">Pulsanti APM</td><td data-t="home.33"><code>channelType: ["LINK"]</code> e un solo <code>paymentType</code></td><td><code>userRedirect.href</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="mt small muted" data-t="home.34">
+            Con più valori in <code>paymentType</code>, o senza il campo, il buyer vede la pagina di selezione del metodo; con un solo valore la salta.
+            Dettagli in <a data-doc="checkout">Checkout Page</a>
+            e nell’elenco dei <a data-doc="paymentTypes">payment type</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="assets/js/i18n.en.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/home.js"></script>
+</body>
+</html>

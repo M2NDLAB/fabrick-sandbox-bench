@@ -1,0 +1,95 @@
+Fabrick Sandbox Bench
+Copyright 2026 Matteo Secondi (M2NDLAB)
+
+This product includes software developed by Matteo Secondi.
+Licensed under the Apache License, Version 2.0. See LICENSE.
+
+===============================================================================
+BUNDLED THIRD-PARTY FILES
+===============================================================================
+
+  assets/fonts/rethink-sans-*.woff2
+      Rethink Sans — Copyright 2022 The Rethink Sans Project Authors
+      SIL Open Font License 1.1 — assets/fonts/OFL-RethinkSans.txt
+
+  assets/fonts/space-grotesk-*.woff2
+      Space Grotesk — Copyright 2020 The Space Grotesk Project Authors
+      SIL Open Font License 1.1 — assets/fonts/OFL-SpaceGrotesk.txt
+
+The font files are the unmodified variable builds distributed by Fontsource.
+
+===============================================================================
+THIRD-PARTY TRADEMARKS — read before redistributing
+===============================================================================
+
+Section 6 of the Apache License 2.0 grants NO trademark rights. This project
+claims none and redistributes no logo or badge: every mark is fetched at
+runtime from its owner's servers.
+
+  Fabrick, Axerve, Gestpay   Fabrick S.p.A. / Banca Sella Holding S.p.A.
+  Klarna                     Klarna Bank AB (publ)
+  PayPal                     PayPal Holdings, Inc.
+  Satispay                   Satispay S.p.A.
+  Amazon Pay                 Amazon.com, Inc. and affiliates
+  Apple Pay                  Apple Inc.
+  Google Pay                 Google LLC
+
+This project is not affiliated with, endorsed by, or representative of any of
+these parties. Its visual language follows the public Fabrick documentation so
+that the two can be read side by side; that resemblance is not a claim of
+origin.
+
+Using these marks in a real integration is governed by the respective brand
+guidelines, not by this licence. The "Linee guida" panel of the APM buttons
+page records the source of each rule and the date it was last read.
+
+===============================================================================
+RUNTIME DEPENDENCIES (fetched by the browser, not vendored)
+===============================================================================
+
+  axerve.js                      Fabrick / Axerve    proprietary
+  fbk-elements.js                Fabrick / Axerve    proprietary
+  Fabrick logo (SVG)             Fabrick             proprietary
+  brand assets (SVG, PNG)        respective owners   proprietary
+
+
+===============================================================================
+VERSIONE ITALIANA
+===============================================================================
+
+FILE DI TERZE PARTI INCLUSI
+-------------------------------------------------------------------------------
+
+  assets/fonts/rethink-sans-*.woff2
+      Rethink Sans — Copyright 2022 The Rethink Sans Project Authors
+      SIL Open Font License 1.1 — assets/fonts/OFL-RethinkSans.txt
+
+  assets/fonts/space-grotesk-*.woff2
+      Space Grotesk — Copyright 2020 The Space Grotesk Project Authors
+      SIL Open Font License 1.1 — assets/fonts/OFL-SpaceGrotesk.txt
+
+I file dei font sono le build variabili non modificate distribuite da Fontsource.
+
+MARCHI DI TERZE PARTI — leggere prima di ridistribuire
+-------------------------------------------------------------------------------
+
+La sezione 6 della Apache License 2.0 NON concede alcun diritto sui marchi.
+Questo progetto non li rivendica e non ridistribuisce loghi o badge: ogni
+marchio viene caricato a runtime dai server del titolare.
+
+Questo progetto non è affiliato ai titolari elencati sopra, non è approvato da
+loro e non li rappresenta. La sua grafica segue la documentazione pubblica
+Fabrick perché le due si possano leggere affiancate; la somiglianza non è una
+dichiarazione di provenienza.
+
+L'uso dei marchi in un'integrazione reale è regolato dalle rispettive linee
+guida, non da questa licenza. Il pannello «Linee guida» della pagina Pulsanti
+APM riporta la fonte di ciascuna regola e la data dell'ultima lettura.
+
+DIPENDENZE A RUNTIME (caricate dal browser, non incluse)
+-------------------------------------------------------------------------------
+
+  axerve.js                      Fabrick / Axerve    proprietario
+  fbk-elements.js                Fabrick / Axerve    proprietario
+  Logo Fabrick (SVG)             Fabrick             proprietario
+  asset di marchio (SVG, PNG)    rispettivi titolari proprietari

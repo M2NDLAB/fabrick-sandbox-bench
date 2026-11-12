@@ -1,0 +1,118 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   home.css — index.html only
+
+   The landing page of the documentation, reduced to its two gestures: a
+   full-bleed blue hero and a grid of cards (src/css/index.module.css).
+
+   This page mounts no payment component, so the containment rule of bench.css
+   does not bind here: the hero clips its light effects with overflow:hidden
+   and the cards lift on hover with a transform. Neither may be copied to an
+   integration page.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--hero);
+  color: #fff;
+  text-align: center;
+  padding: 3.6rem 1rem 3rem;
+}
+/* Two soft radial lights and a top shade: flat blue reads as a banner ad,
+   this reads as a surface. */
+.hero::before {
+  content: "";
+  position: absolute; inset: -40%;
+  background:
+    radial-gradient(closest-side, rgba(255, 255, 255, 0.22), transparent 55%),
+    radial-gradient(closest-side, rgba(0, 0, 0, 0.16), transparent 60%);
+  transform: translate(10%, -10%);
+  pointer-events: none;
+}
+.hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.12), transparent 55%);
+  pointer-events: none;
+}
+.hero__inner { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
+.hero__eyebrow {
+  display: inline-block;
+  font-family: var(--font-head); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.25rem 0.8rem; margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+.hero h1 { color: #fff; font-size: clamp(2.2rem, 3.2vw, 3.1rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 0.7rem; }
+.hero p { font-size: 1.08rem; opacity: 0.92; max-width: 62ch; margin: 0 auto; }
+
+.hero__ctas { margin-top: 1.6rem; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.cta {
+  height: 46px; padding: 0 20px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  border-radius: 14px;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1), box-shadow 0.2s ease, background 0.18s ease, border-color 0.18s ease;
+}
+.cta svg { width: 16px; height: 16px; transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1); }
+.cta--primary { background: rgba(255, 255, 255, 0.96); color: var(--navy); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08); }
+.cta--primary:hover { transform: translateY(-2px); background: #fff; color: var(--navy); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.1); }
+.cta--primary:hover svg { transform: translateX(4px); }
+.cta--secondary { background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid rgba(255, 255, 255, 0.25); }
+.cta--secondary:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.35); color: #fff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14); }
+
+/* ── Cards ─────────────────────────────────────────────────────────────── */
+.tiles-section { background: var(--bg-soft); padding: 2.4rem 1rem 2.8rem; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-title { font-size: 1.35rem; margin-bottom: 0.3rem; }
+.section-sub { color: var(--muted); margin-bottom: 1.4rem; max-width: 70ch; }
+
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; list-style: none; margin: 0; padding: 0; }
+.tiles li { margin: 0; }
+
+.tile {
+  height: 100%;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  padding: 1.35rem 1.4rem 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  color: var(--text);
+  text-decoration: none !important;
+  transition: border-color 0.2s ease, box-shadow 0.22s ease, transform 0.22s ease;
+}
+.tile:hover { border-color: rgba(22, 59, 255, 0.28); box-shadow: var(--shadow-lift); transform: translateY(-2px); color: var(--text); }
+.tile:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.tile__icon {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  background: var(--primary-lightest);
+  color: var(--primary);
+}
+.tile__icon svg { width: 22px; height: 22px; }
+.tile__title { font-family: var(--font-head); font-weight: 700; font-size: 1.15rem; line-height: 1.25; margin: 0.2rem 0 0; }
+.tile__text { color: var(--muted); font-size: 0.93rem; line-height: 1.55; margin: 0; flex: 1; }
+.tile__foot { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.4rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+.tile__needs { font-size: 0.78rem; color: var(--faint); }
+.tile__go { display: inline-flex; align-items: center; gap: 0.3rem; font-weight: 600; font-size: 0.9rem; color: var(--primary); white-space: nowrap; }
+.tile__go svg { width: 15px; height: 15px; transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1); }
+.tile:hover .tile__go svg { transform: translateX(4px); }
+
+/* ── How it works ──────────────────────────────────────────────────────── */
+.how { padding: 2.4rem 1rem 3rem; }
+.how__grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 1.25rem; align-items: start; }
+.how .card { margin-bottom: 0; }
+
+@media (max-width: 1000px) {
+  .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .how__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .tiles { grid-template-columns: 1fr; gap: 14px; }
+  .hero { padding: 2.6rem 1rem 2.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile:hover, .cta:hover { transform: none; }
+}

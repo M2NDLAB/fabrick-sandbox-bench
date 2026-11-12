@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Lightbox — Fabrick Sandbox Bench</title>
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/bench.css" />
+  <link rel="stylesheet" href="assets/css/lightbox.css" />
+  <!-- axerve.js is not included statically: lightbox.js loads it, because this
+       page lets you swap the SDK build under test (see "SDK LOADER" there).
+       The pay button stays disabled until the script has loaded. -->
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="page">
+    <div id="crumbs"></div>
+
+    <div class="page-head">
+      <h1 data-t="lb.1">Lightbox</h1>
+      <p class="lead" data-t="lb.2">La pagina di pagamento Fabrick in un pop-up sovrapposto al tuo checkout. A fine pagamento Fabrick esegue il redirect, oppure passa l’esito alla tua callback.</p>
+      <div class="doc-links">
+        <a data-doc="lightbox" data-icon data-t="lb.3">Guida Lightbox</a>
+        <a data-doc="testCards" data-icon data-t="lb.4">Carte di test</a>
+        <a data-doc="applePay" data-icon data-t="lb.5">Apple Pay nella Lightbox</a>
+      </div>
+    </div>
+
+    <div id="returnHost"></div>
+
+    <!-- Choice of the SDK script. Empty means the default URL. Changing it
+         reloads the page: once a script has defined window.axerve, there is no
+         clean way to replace it. -->
+    <section class="card">
+      <div class="field">
+        <label for="sdkUrl" data-t="lb.6">Script SDK</label>
+        <div class="input-row">
+          <input class="input" type="text" id="sdkUrl" autocomplete="off" spellcheck="false" />
+          <button type="button" class="btn btn--secondary" id="sdkApply" data-t="lb.7">Applica</button>
+          <button type="button" class="btn btn--secondary" id="customJsOpen" data-t="lb.8">Custom JS</button>
+          <button type="button" class="btn btn--secondary" id="sdkReset" data-t="lb.9">Default</button>
+        </div>
+        <small class="hint" data-t="lb.10">Lascia vuoto per usare lo script sandbox di default. Solo URL https. Con «Custom JS» incolli o carichi direttamente il codice: ha priorità sull’URL.</small>
+        <div class="sdk-current" id="sdkCurrent"></div>
+      </div>
+    </section>
+
+    <!-- Payment data on the front, integration code on the back. -->
+    <section class="card" aria-labelledby="payCardTitle">
+      <div class="card-head">
+        <h2 id="payCardTitle" data-t="lb.11">Dati pagamento</h2>
+        <button type="button" class="btn btn--secondary btn--sm" id="flipToggle" aria-pressed="false" aria-controls="payFlipper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span id="flipToggleText" data-t="lb.12">Codice</span>
+        </button>
+      </div>
+
+      <div class="flip-scene">
+        <div class="flipper" id="payFlipper">
+
+          <div class="face face--front" id="payFront">
+            <div id="sessionFields"></div>
+            <form id="paymentForm" class="pay-form" novalidate>
+
+              <div class="field">
+                <span class="label" id="cbLabel" data-t="lb.13">Gestione dell’esito</span>
+                <div class="chips" role="radiogroup" aria-labelledby="cbLabel">
+                  <label class="chip" data-t="lb.14"><input type="radio" name="callbackMode" value="enabled" checked />Callback JS</label>
+                  <label class="chip" data-t="lb.15"><input type="radio" name="callbackMode" value="disabled" />Solo redirect</label>
+                </div>
+                <small class="hint" data-t="lb.16">Con la callback Fabrick non esegue il redirect: l’esito arriva alla tua funzione. Senza, il buyer viene portato alla URL di esito della transazione.</small>
+              </div>
+
+              <div class="actions">
+                <button type="submit" class="btn btn--primary btn--block" id="payButton"><span id="buttonText" data-t="lb.17">Apri Lightbox</span></button>
+              </div>
+            </form>
+          </div>
+
+          <div class="face face--back" id="payBack" inert aria-label="Codice di integrazione" data-t-attr="aria-label:lb.18">
+            <div class="code-bar">
+              <div class="tabs tabs--files" role="tablist" aria-label="File">
+                <button type="button" class="tabs__item" role="tab" id="tab-html" data-file="html" aria-controls="code-html" aria-selected="true" data-t="lb.19">index.html</button>
+                <button type="button" class="tabs__item" role="tab" id="tab-css" data-file="css" aria-controls="code-css" aria-selected="false" tabindex="-1" data-t="lb.20">style.css</button>
+                <button type="button" class="tabs__item" role="tab" id="tab-js" data-file="js" aria-controls="code-js" aria-selected="false" tabindex="-1" data-t="lb.21">app.js</button>
+              </div>
+              <div class="seg" role="group" aria-label="Struttura del codice" data-t-attr="aria-label:lb.22">
+                <button type="button" class="seg__btn" data-structure="split" aria-pressed="true" data-t="lb.23">File separati</button>
+                <button type="button" class="seg__btn" data-structure="single" aria-pressed="false" data-t="lb.24">File unico</button>
+              </div>
+            </div>
+
+            <label for="code-html" class="sr-only" data-t="lb.25">Codice HTML</label>
+            <textarea class="code-editor" id="code-html" role="tabpanel" aria-labelledby="tab-html" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+            <label for="code-css" class="sr-only" data-t="lb.26">Codice CSS</label>
+            <textarea class="code-editor" id="code-css" role="tabpanel" aria-labelledby="tab-css" spellcheck="false" autocomplete="off" autocapitalize="off" hidden></textarea>
+            <label for="code-js" class="sr-only" data-t="lb.27">Codice JavaScript</label>
+            <textarea class="code-editor" id="code-js" role="tabpanel" aria-labelledby="tab-js" spellcheck="false" autocomplete="off" autocapitalize="off" hidden></textarea>
+
+            <div class="code-meta">
+              <span id="codeState"></span>
+              <span id="codeMeta"></span>
+            </div>
+            <div class="status status--info code-note" id="codeNote" role="status" aria-live="polite" hidden></div>
+
+            <div class="actions">
+              <button type="button" class="btn btn--secondary btn--sm" id="codeCopy" data-t="lb.28">Copia</button>
+              <button type="button" class="btn btn--secondary btn--sm" id="codeDownload" data-t="lb.29">Scarica</button>
+              <button type="button" class="btn btn--secondary btn--sm" id="codeRegenerate" data-t="lb.30">Rigenera dai dati</button>
+              <div class="right">
+                <button type="button" class="btn btn--primary btn--sm" id="codeSave" data-t="lb.31">Salva</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Outside the faces: Lightbox outcomes arrive asynchronously and must
+           stay visible even when the card is turned over. -->
+      <div id="statusMessage"></div>
+    </section>
+
+    <section class="card" id="detailCard"></section>
+
+    <section class="card">
+      <h2 data-t="lb.32">Istruzioni</h2>
+      <ol class="steps">
+        <li data-t="lb.33">Crea la transazione con <strong>Invia payment/create</strong>: il body precompilato è <strong>senza</strong> l’oggetto <code>paymentChannel</code>, come richiede la Lightbox.</li>
+        <li data-t="lb.34">In alternativa, nella scheda «Ho già i valori» incolla <code>paymentID</code> e <code>paymentToken</code> ottenuti altrove.</li>
+        <li data-t="lb.35">Scegli se gestire l’esito con la callback o lasciare il redirect, poi premi <strong>Apri Lightbox</strong>.</li>
+        <li data-t="lb.36">Con il pulsante <strong>Codice</strong> vedi, modifichi e salvi la pagina di integrazione che corrisponde a quei dati.</li>
+      </ol>
+
+      <div class="mt admonition admonition--warning">
+        <div class="admonition__title" data-t="lb.37">Blocco pop-up</div>
+        <p data-t="lb.38">Se il browser o il dispositivo blocca i pop-up, l’apertura di nuove pagine può essere impedita e il pagamento può non completarsi. Su desktop la richiesta di consenso all’apertura non sempre compare.</p>
+      </div>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="lb.39">Metodi alternativi (APM)</div>
+        <p data-t="lb.40">Se il buyer sceglie un metodo diverso dalla carta, o se in <code>payment/create</code> hai indicato un solo APM, Fabrick apre una nuova pagina verso il servizio. A fine pagamento quella pagina si chiude e il buyer torna qui.</p>
+      </div>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="lb.41">Apple Pay</div>
+        <p data-t="lb.42">Per mostrare Apple Pay nella Lightbox serve la <a data-doc="applePay">configurazione aggiuntiva</a> descritta nella pagina del metodo: senza, il pulsante non compare.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Custom JS dialog. The code is saved in this browser's localStorage and
+       executed at load time in place of the SDK script. It is never read from
+       the URL or the query string. -->
+  <dialog class="dialog" id="customJsDialog" aria-labelledby="customJsTitle">
+    <div class="dialog__inner">
+      <div class="dialog__head">
+        <h2 id="customJsTitle" data-t="lb.43">Custom JS</h2>
+        <button type="button" class="icon-btn" id="customJsClose" aria-label="Chiudi" data-t-attr="aria-label:lb.close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="dialog__body">
+        <div class="row dialog__tools">
+          <button type="button" class="btn btn--secondary btn--sm" id="customJsFileBtn" data-t="lb.44">Carica file .js</button>
+          <input type="file" id="customJsFile" accept=".js,.mjs,.txt,text/javascript,application/javascript" hidden />
+          <button type="button" class="btn btn--secondary btn--sm" id="customJsCopy" data-t="lb.45">Copia</button>
+        </div>
+        <label for="customJsCode" class="sr-only" data-t="lb.46">Codice JavaScript</label>
+        <textarea class="code-editor" id="customJsCode" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Incolla qui il codice dello script SDK, oppure carica un file .js" data-t-attr="placeholder:lb.ph"></textarea>
+        <div class="code-meta" id="customJsMeta"></div>
+        <div class="checks" id="customJsChecks" aria-live="polite"></div>
+      </div>
+      <div class="dialog__foot">
+        <button type="button" class="btn btn--danger btn--sm" id="customJsRemove" data-t="lb.47">Rimuovi custom JS</button>
+        <div class="right">
+          <button type="button" class="btn btn--secondary btn--sm" id="customJsCancel" data-t="lb.48">Annulla</button>
+          <button type="button" class="btn btn--primary btn--sm" id="customJsSave" data-t="lb.49">Salva e carica</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <footer id="footer"></footer>
+
+  <script src="assets/js/i18n.en.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/lightbox.js"></script>
+</body>
+</html>

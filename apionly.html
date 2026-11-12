@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>API Only — Fabrick Sandbox Bench</title>
+  <script src="assets/js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/bench.css" />
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <main class="page">
+    <div id="crumbs"></div>
+
+    <div class="page-head">
+      <h1 data-t="api.1">API Only</h1>
+      <p class="lead" data-t="api.2">Nessuna pagina Fabrick: il form carta è tuo. I dati vanno a Fabrick con <code>payment/submit</code>, autenticata dal Payment Token, e la risposta dice se il pagamento è concluso o se serve reindirizzare il buyer all’autenticazione.</p>
+      <div class="doc-links">
+        <a data-doc="apionly" data-icon data-t="api.3">Guida API Only</a>
+        <a data-doc="testCards" data-icon data-t="api.4">Carte di test</a>
+        <a data-doc="apiErrors" data-icon data-t="api.5">Elenco degli errori</a>
+      </div>
+    </div>
+
+    <div id="returnHost"></div>
+
+    <div class="admonition admonition--danger">
+      <div class="admonition__title" data-t="api.6">Solo carte di test</div>
+      <p data-t="api.7">La sandbox accetta esclusivamente le <a data-doc="testCards">carte di test</a> dell’elenco: qualsiasi altra carta viene rifiutata. Non inserire mai i dati di una carta reale. Il banco non salva i dati carta e non li scrive nei log.</p>
+    </div>
+
+    <section class="card">
+      <h2 data-t="api.8">Dati pagamento</h2>
+      <div id="sessionFields"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="api.9">Form di pagamento</h2>
+      <p class="card-sub" data-t="api.10">Il form che in un’integrazione API Only costruisci tu. Qui serve a comporre il body di <code>payment/submit</code>.</p>
+
+      <form id="payForm" novalidate>
+        <div class="field">
+          <span class="label" id="modeLabel" data-t="api.11">Cosa invii</span>
+          <div class="chips" role="radiogroup" aria-labelledby="modeLabel">
+            <label class="chip" data-t="api.12"><input type="radio" name="payMode" value="card" checked />Dati carta</label>
+            <label class="chip" data-t="api.13"><input type="radio" name="payMode" value="token" />Carta tokenizzata</label>
+          </div>
+        </div>
+
+        <div id="cardFields">
+          <div class="field">
+            <label for="testCard" data-t="api.14">Carta di test</label>
+            <select class="select" id="testCard"></select>
+            <small class="hint" data-t="api.15">Compila numero e scadenza con una carta dell’elenco di documentazione. Ogni carta simula uno scenario 3DS diverso.</small>
+          </div>
+          <div class="field-grid field-grid--3">
+            <div class="field">
+              <label for="cardNumber" data-t="api.16">Numero carta</label>
+              <input class="input" type="text" id="cardNumber" inputmode="numeric" autocomplete="off" placeholder="4012000000003101" maxlength="23" />
+            </div>
+            <div class="field">
+              <label for="expMonth" data-t="api.17">Mese</label>
+              <input class="input" type="text" id="expMonth" inputmode="numeric" autocomplete="off" placeholder="05" maxlength="2" />
+            </div>
+            <div class="field">
+              <label for="expYear" data-t="api.18">Anno</label>
+              <input class="input" type="text" id="expYear" inputmode="numeric" autocomplete="off" placeholder="27" maxlength="2" />
+            </div>
+            <div class="field">
+              <label for="cvv" data-t="api.19">CVV</label>
+              <input class="input" type="text" id="cvv" inputmode="numeric" autocomplete="off" placeholder="123" maxlength="4" />
+            </div>
+          </div>
+        </div>
+
+        <div id="tokenFields" hidden>
+          <div class="field">
+            <label for="cardToken" data-t="api.20">Token della carta</label>
+            <input class="input" type="text" id="cardToken" autocomplete="off" spellcheck="false" placeholder="40ZUU8NXALR33101" />
+            <small class="hint" data-t="api.21">Il token di una carta già tokenizzata, inviato in <code>paymentTypeDetails.creditcard.token</code>. Senza dati carta questa chiamata può partire anche dal server.</small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn--primary btn--block" id="submitBtn"><span id="submitText" data-t="api.22">Invia payment/submit</span></button>
+        </div>
+      </form>
+      <div id="statusMessage"></div>
+    </section>
+
+    <section class="card" id="responseCard" hidden>
+      <h2 data-t="api.23">Risposta</h2>
+      <div class="stack" id="responseOut"></div>
+    </section>
+
+    <section class="card">
+      <h2 data-t="api.24">Codice</h2>
+      <p class="card-sub" data-t="api.25">La chiamata che il tuo form esegue dal browser. Il codice legge i valori dai campi: nessun dato carta viene scritto nel sorgente.</p>
+      <div id="codeHost"></div>
+    </section>
+
+    <section class="card" id="detailCard"></section>
+
+    <section class="card">
+      <h2 data-t="api.26">Da sapere</h2>
+
+      <p class="eyebrow" data-t="api.27">I tre esiti di <code>payment/submit</code></p>
+      <div class="scroll-x">
+        <table class="table">
+          <thead><tr><th data-t="api.28">Scenario</th><th data-t="api.29">Come lo riconosci</th><th data-t="api.30">Cosa fare</th></tr></thead>
+          <tbody>
+            <tr><td data-t="api.31">Autenticazione richiesta</td><td data-t="api.32"><code>payload.transactionErrorCode</code> vale <code>8006</code></td><td data-t="api.33">Reindirizza il buyer a <code>payload.userRedirect.href</code>: al termine torna sulla URL di esito</td></tr>
+            <tr><td data-t="api.34">Esito immediato</td><td data-t="api.35"><code>payload.transactionResult</code> è presente</td><td data-t="api.36">Leggi l’esito; <code>payload.userRedirect.href</code> è la URL di esito dell’esercente</td></tr>
+            <tr><td data-t="api.37">Errore</td><td data-t="api.38"><code>error.code</code> diverso da <code>0</code></td><td data-t="api.39">Consulta l’<a data-doc="apiErrors">elenco degli errori</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt admonition admonition--tip">
+        <div class="admonition__title" data-t="api.40">Simulare l’autenticazione</div>
+        <p data-t="api.41">Con la carta <code>4012000000003101</code> (challenge) la pagina di autenticazione chiede una password: <code>password</code> per l’esito positivo, tre tentativi errati o l’annullamento per quello negativo.</p>
+      </div>
+      <div id="returnTip"></div>
+      <div class="admonition admonition--warning">
+        <div class="admonition__title" data-t="api.42">Dati carta e PCI DSS</div>
+        <p data-t="api.43">I dati carta possono transitare dal tuo server solo se è parte di un ambiente conforme alla PCI DSS. Senza quella conformità il form va mostrato nella sessione del buyer e <code>payment/submit</code> va chiamata lato client, come fa questa pagina: i dati non toccano i tuoi sistemi.</p>
+      </div>
+      <div class="admonition admonition--info">
+        <div class="admonition__title" data-t="api.44">Per questa integrazione</div>
+        <p data-t="api.45">La transazione va creata <strong>senza</strong> l’oggetto <code>paymentChannel</code>: il body precompilato è già così. Wallet e APM hanno un body dedicato, descritto nella pagina di ciascun <a data-doc="apm">metodo di pagamento</a>: questo banco copre la carta.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="assets/js/i18n.en.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/apionly.js"></script>
+</body>
+</html>

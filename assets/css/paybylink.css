@@ -1,0 +1,26 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   paybylink.css — paybylink.html only
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.qr { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; margin-top: 1rem; }
+
+/* A QR code is scanned against a white quiet zone. The frame stays white in
+   the dark theme too: a QR on a dark surface is the first thing that fails
+   under a phone camera. */
+.qr__frame {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  line-height: 0;
+}
+.qr__frame img {
+  display: block;
+  width: 240px; height: auto;
+  /* Keeps the modules square-edged when the image is scaled up. */
+  image-rendering: pixelated;
+}
+.qr__side { flex: 1 1 260px; min-width: 0; }
+
+.summary { margin: 1rem 0 0; }
+.summary p { margin: 0 0 0.4rem; }
