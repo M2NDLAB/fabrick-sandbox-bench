@@ -8,6 +8,7 @@ Thumbs.db
 # Nothing is installed or built, but tools leave these behind
 node_modules/
 dist/
+.wrangler/
 
 # The shortest paths to a leaked credential: local notes and exported requests
 .env

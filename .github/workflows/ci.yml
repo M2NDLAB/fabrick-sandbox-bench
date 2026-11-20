@@ -1,9 +1,8 @@
-# Checks the static site, then publishes it to GitHub Pages.
-# Enable under Settings → Pages → Source: GitHub Actions.
-name: Pages
+# Checks the static site on every push to master or dev and on every pull
+# request. Publishing is not done here: Cloudflare Workers Builds deploys the
+# site from the repository on its own (see README, "Publishing").
+name: CI
 
-# Branch model: work lands on dev, stable versions are merged into master.
-# Checks run on both; only master is published.
 on:
   push:
     branches: [master, dev]
@@ -14,14 +13,14 @@ permissions:
   contents: read
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Script syntax
         run: |
@@ -29,8 +28,6 @@ jobs:
             node --check "$f" || exit 1
           done
 
-      # A page that references a missing local file fails silently in the
-      # browser: an unstyled page, or a button that does nothing.
       # Every data-t key in the pages should have an English entry, unless the
       # text is the same in both languages. Reported, not enforced: a missing
       # entry falls back to Italian, it does not break the page.
@@ -40,6 +37,8 @@ jobs:
             grep -q "'$key':" assets/js/i18n.en.js || echo "::notice::no English entry for $key"
           done
 
+      # A page that references a missing local file fails silently in the
+      # browser: an unstyled page, or a button that does nothing.
       - name: Local asset references
         run: |
           status=0
@@ -71,42 +70,20 @@ jobs:
             exit 1
           fi
 
-  deploy:
-    needs: check
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-
-      - name: Apple Pay domain association file
+      # Cloudflare publishes every file not listed in .assetsignore, hidden
+      # ones included. These must never reach the website.
+      - name: Repository files kept off the website
         run: |
-          if [ ! -f .well-known/apple-developer-merchantid-domain-association ]; then
-            echo "::warning::.well-known/apple-developer-merchantid-domain-association is missing: Apple Pay will not be offered. See .well-known/README.md"
-          fi
+          status=0
+          for entry in .git .github .wrangler wrangler.jsonc '*.md' LICENSE NOTICE; do
+            if ! grep -qxF -- "$entry" .assetsignore; then
+              echo "::error file=.assetsignore::missing entry $entry"
+              status=1
+            fi
+          done
+          exit $status
 
-      # The artifact is packaged by hand instead of with upload-pages-artifact:
-      # from v4 that action excludes every dotfile, which would silently drop
-      # .well-known (and with it Apple Pay) and .nojekyll. deploy-pages only
-      # needs an artifact named "github-pages" holding artifact.tar.
-      - name: Package the site, hidden folders included
-        run: |
-          tar --dereference --hard-dereference \
-            --exclude=.git --exclude=.github \
-            -cf "$RUNNER_TEMP/artifact.tar" .
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: ${{ runner.temp }}/artifact.tar
-          retention-days: 1
-          if-no-files-found: error
-
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      # Validates wrangler.jsonc the way the Cloudflare build reads it, without
+      # deploying anything and without credentials.
+      - name: Cloudflare configuration (dry run)
+        run: npx --yes wrangler@4 deploy --dry-run

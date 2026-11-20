@@ -1,0 +1,25 @@
+// Cloudflare Workers configuration: the site is served as static assets,
+// with no Worker script. Deployed by Workers Builds from the GitHub repository.
+{
+  // Must match the Worker name chosen in the Cloudflare dashboard.
+  "name": "fabrick-sandbox-bench",
+  // Runtime behaviour date. Static assets do not depend on it, but Wrangler
+  // requires one; move it forward deliberately, not automatically.
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    // The repository root is the site. What must not be published is listed
+    // in .assetsignore, because Cloudflare uploads every file, hidden ones too.
+    "directory": "./",
+    // Pages are linked as checkout.html, paybylink.html…: serve the exact file,
+    // with no redirect to an extension-less address. A redirect would add a
+    // round trip to every navigation and to every return from the payment page.
+    "html_handling": "auto-trailing-slash",
+    // A missing file answers 404, not the home page: a broken reference shows
+    // up as an error instead of an unstyled page.
+    "not_found_handling": "none"
+  },
+  // Public address <name>.<account>.workers.dev, plus a preview address for
+  // each version uploaded from a non-production branch (dev).
+  "workers_dev": true,
+  "preview_urls": true
+}

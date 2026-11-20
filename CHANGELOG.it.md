@@ -7,6 +7,31 @@ progetto adotta il [Semantic Versioning](https://semver.org/lang/it/).
 
 ## [Unreleased]
 
+## [2.1.0] — 2026-11-20
+
+### Aggiunto
+
+- Configurazione Cloudflare Workers: `wrangler.jsonc`, `.assetsignore` e
+  `_headers` (`nosniff`, politica sul referrer, nessun inserimento in frame,
+  `noindex`).
+- Controlli CI per l'elenco dei file esclusi e la configurazione Cloudflare.
+
+### Modificato
+
+- **Hosting spostato da GitHub Pages a Cloudflare Workers.** `master` è la
+  produzione; ogni altro branch ha un indirizzo di anteprima.
+- Le pagine sono servite a `/checkout`, `/paybylink`…; gli indirizzi `.html`
+  reindirizzano lì conservando la query string.
+- Il workflow GitHub (`ci.yml`, prima `pages.yml`) esegue solo controlli e non
+  pubblica nulla.
+- Dependabot apre i suoi aggiornamenti su `dev`.
+
+### Rimosso
+
+- La pubblicazione su GitHub Pages e `.nojekyll`.
+- `.well-known/` e il file di associazione del dominio per Apple Pay: non
+  servono per la sandbox.
+
 ## [2.0.0] — 2026-11-12
 
 Una riprogettazione sull'aspetto della documentazione Fabrick. La console di

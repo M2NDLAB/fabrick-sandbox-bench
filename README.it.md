@@ -97,11 +97,14 @@ assets/js/i18n.en.js          testo inglese del markup statico
 assets/js/core.js             costanti, shell, dati pagamento, link, HTTP, widget
 assets/js/<pagina>.js         una sola pagina, nessuna conoscenza delle altre
 assets/fonts/                 Rethink Sans, Space Grotesk (SIL OFL 1.1)
-.well-known/                  file di associazione dominio Apple Pay (vedi il suo README)
+
+wrangler.jsonc                Cloudflare: la radice del repository servita come asset statici
+.assetsignore                 file del repository da non pubblicare
+_headers                      header di risposta impostati da Cloudflare
 ```
 
 Tutti i percorsi sono relativi: il sito funziona alla radice di un dominio e
-sotto `/nome-repository/`. `.nojekyll` impedisce a Jekyll di elaborare `assets/`.
+sotto un sotto-percorso.
 
 ### Perché documenti separati e non una SPA
 
@@ -127,23 +130,41 @@ La versione lunga è in [CONTRIBUTING.it.md](CONTRIBUTING.it.md).
 
 ## Pubblicazione
 
-Il workflow [`pages.yml`](.github/workflows/pages.yml) pubblica su GitHub Pages a
-ogni push su `master`, dopo aver controllato la sintassi degli script e i
-riferimenti agli asset; su `dev` e sulle pull request esegue solo i controlli. Si
-abilita da **Settings → Pages → Source: GitHub Actions**.
+Il sito è pubblicato su **Cloudflare Workers** come asset statici, senza uno
+script Worker. Il servizio di build di Cloudflare (Workers Builds) è collegato a
+questo repository e pubblica da solo:
+
+| Branch | Risultato |
+|---|---|
+| `master` | produzione, su `https://fabrick-sandbox-bench.<account>.workers.dev` |
+| `dev` e gli altri branch | una versione di anteprima con un proprio indirizzo, elencata nelle **Previews** del Worker |
+
+Lo guidano tre file, tutti alla radice del repository:
+
+- `wrangler.jsonc` — il nome del Worker (deve coincidere con quello nella
+  dashboard) e il modo in cui sono servite le pagine. Cloudflare serve
+  `checkout.html` a `/checkout`: l'indirizzo `.html` risponde con un redirect
+  che conserva la query string, quindi URL di ritorno e segnalibri continuano a
+  funzionare.
+- `.assetsignore` — Cloudflare carica **ogni** file della cartella degli asset,
+  anche quelli nascosti. `.git`, `.github`, i documenti Markdown e i file di
+  licenza sono elencati qui perché non finiscano mai sul sito.
+- `_headers` — `nosniff`, una politica sul referrer, nessun inserimento del
+  banco in frame altrui e `noindex`.
+
+GitHub Actions ([`ci.yml`](.github/workflows/ci.yml)) fa solo controlli:
+sintassi degli script, riferimenti agli asset, costanti sandbox, elenco dei file
+esclusi e una prova a vuoto della configurazione Cloudflare. Non pubblica nulla.
 
 Lo sviluppo avviene su `dev`; `master` riceve solo le versioni stabili. Vedi
 [CONTRIBUTING.it.md](CONTRIBUTING.it.md#branch-e-commit).
 
-### Apple Pay richiede il file di associazione del dominio
+Per provare in locale il comportamento di Cloudflare (redirect, header, file
+esclusi):
 
-Perché Apple Pay compaia nei Web Components e nella Lightbox, il dominio deve
-servire il file di associazione Fabrick a
-`/.well-known/apple-developer-merchantid-domain-association`, **alla radice del
-dominio**. Un sito GitHub Pages di progetto vive sotto `/<repository>/`, che non
-è la radice: serve un dominio personalizzato, oppure pubblicare il file dal
-repository `<owner>.github.io`. Dettagli in
-[`.well-known/README.md`](.well-known/README.md).
+```bash
+npx wrangler dev
+```
 
 ## Sicurezza
 

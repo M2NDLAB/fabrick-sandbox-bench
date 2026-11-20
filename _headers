@@ -1,0 +1,12 @@
+# Response headers for every file, applied by Cloudflare (not uploaded as an
+# asset). No Content-Security-Policy for scripts: the 3DS challenge and the
+# wallets load frames and scripts from hosts that cannot be listed in advance,
+# and the Lightbox page can load an SDK from a custom URL by design.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  # The bench embeds payment components; nothing should embed the bench.
+  Content-Security-Policy: frame-ancestors 'none'
+  X-Frame-Options: DENY
+  # A sandbox test tool has no reason to appear in search results.
+  X-Robots-Tag: noindex, nofollow
