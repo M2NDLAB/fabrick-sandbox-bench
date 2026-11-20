@@ -142,12 +142,14 @@ Then, by hand:
 
 ```
 feature/…  ─┐
-fix/…      ─┼─►  dev  ──(stable version)──►  master  ──►  GitHub Pages
+fix/…      ─┼─►  dev  ──(stable version)──►  master  ──►  Cloudflare
 docs/…     ─┘
 ```
 
 - `master` is what is published. It receives a merge from `dev` only when
   `dev` is a stable version, and every such merge is tagged (`v2.1.0`).
+- Every push to `dev` produces a Cloudflare preview with its own address:
+  check it there before merging into `master`.
 - `dev` is the integration branch. It receives feature and fix branches
   through pull requests.
 - One branch per feature or fix, named for what it does (`feature/…`,

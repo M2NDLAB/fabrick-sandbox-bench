@@ -35,7 +35,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    1. CONSTANTS
    ═══════════════════════════════════════════════════════════════════════════ */
-const BUILD = '2026-11-12.r2';
+const BUILD = '2026-11-20.r1';
 const REPO_URL = 'https://github.com/M2NDLAB/fabrick-sandbox-bench';
 
 /* The language is fixed for the lifetime of the page: theme-init.js set it on

@@ -86,7 +86,8 @@ believe is involved. Do not attach credentials.
 | Brand images and the Fabrick logo from their owners' servers | those servers see the request and the page's origin |
 | Custom SDK on the Lightbox page | declared above |
 | `innerHTML` | constant markup written in the source only |
-| `.well-known/` published with the site | holds a public file by design; nothing else belongs there |
+| No Content-Security-Policy for scripts | the 3DS challenge and the wallets load frames and scripts from hosts that cannot be listed in advance; `_headers` sets `frame-ancestors 'none'`, `nosniff` and `noindex` |
+| Repository files on the website | prevented by `.assetsignore`, checked by CI |
 
 What is **not** accepted, and should be reported: any path where a value typed
 by the user or returned by an API reaches the DOM as markup, ends up in an event

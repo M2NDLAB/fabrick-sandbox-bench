@@ -87,7 +87,8 @@ ritieni coinvolto. Non allegare credenziali.
 | Immagini dei brand e logo Fabrick dai server dei titolari | quei server vedono la richiesta e l'origine della pagina |
 | SDK personalizzato nella pagina Lightbox | dichiarato sopra |
 | `innerHTML` | solo markup costante scritto nel sorgente |
-| `.well-known/` pubblicata con il sito | contiene per sua natura un file pubblico; non deve contenere altro |
+| Nessuna Content-Security-Policy per gli script | challenge 3DS e wallet caricano frame e script da host non elencabili in anticipo; `_headers` imposta `frame-ancestors 'none'`, `nosniff` e `noindex` |
+| File del repository sul sito | impediti da `.assetsignore`, controllati dalla CI |
 
 Cosa **non** è accettato, e va segnalato: qualsiasi percorso in cui un valore
 digitato dall'utente o restituito da un'API arrivi al DOM come markup, finisca

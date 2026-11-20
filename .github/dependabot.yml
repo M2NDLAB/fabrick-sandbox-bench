@@ -1,9 +1,11 @@
 # The project has no package dependencies. This keeps the GitHub Actions used
-# by the Pages workflow up to date.
+# by the CI workflow up to date.
 version: 2
 updates:
   - package-ecosystem: github-actions
     directory: /
+    # Updates follow the branch model: they land on dev, not on master.
+    target-branch: dev
     schedule:
       interval: monthly
     commit-message:
